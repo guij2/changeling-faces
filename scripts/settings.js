@@ -77,13 +77,13 @@ export function registerSettings() {
     default: false
   });
 
-  game.settings.register(MODULE_ID, "allCharacters", {
-    name: "CHANGELING.Settings.AllCharacters.Name",
-    hint: "CHANGELING.Settings.AllCharacters.Hint",
+  // Actor ids the GM designated as changelings. World-scoped, so only the GM can change it.
+  game.settings.register(MODULE_ID, "changelings", {
     scope: "world",
-    config: true,
-    type: Boolean,
-    default: true
+    config: false,
+    type: Array,
+    default: [],
+    onChange: () => Hooks.callAll(`${MODULE_ID}.designation`)
   });
 
   // ---------------- Client (each player) ----------------

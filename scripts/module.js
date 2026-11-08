@@ -1,7 +1,8 @@
-import { MODULE_ID, FLAGS, TRUE_FORM_ID, loc } from "./constants.js";
+import { MODULE_ID, TRUE_FORM_ID, PALETTE } from "./constants.js";
 import { registerSettings, registerKeybindings } from "./settings.js";
 import {
-  resolveChangeling, getAppearances, getTrueForm, getCurrentId, addAppearance, removeAppearance, canUseOn
+  resolveChangeling, getAppearances, getTrueForm, getCurrentId, addAppearance, removeAppearance, canUseOn,
+  hasAnyChangeling, isChangelingActor, setChangeling, looksLikeChangeling
 } from "./store.js";
 import { applyAppearance, revertToTrueForm, registerDeathHooks } from "./apply.js";
 import { registerUploadSocket, prepareImage, uploadForActor } from "./upload.js";
@@ -45,6 +46,9 @@ Hooks.once("ready", () => {
     removeAppearance,
     prepareImage,
     uploadForActor,
+    /** GM only: designate/undesignate an actor as a changeling. */
+    setChangeling,
+    isChangelingActor,
     TRUE_FORM_ID
   };
 });
@@ -65,7 +69,7 @@ Hooks.on("updateActor", (actor, changes) => {
 Hooks.on("getSceneControlButtons", controls => {
   const tokens = controls.tokens ?? controls.token;
   if (!tokens?.tools) return;
-  const visible = !game.user.isGM || game.actors?.some(a => a.getFlag(MODULE_ID, FLAGS.ENABLED) === true);
+  const visible = !!game.actors && hasAnyChangeling();
   tokens.tools.changelingCapture = {
     name: "changelingCapture",
     order: 90,
@@ -91,3 +95,34 @@ Hooks.on("getSceneControlButtons", controls => {
 
 /* Leaving the token layer turns capture mode off. */
 Hooks.on("canvasTearDown", () => state.captureMode && setCaptureMode(false));
+
+/* GM changed who is a changeling: redraw everything that depends on it, on every client. */
+Hooks.on(`${MODULE_ID}.designation`, () => {
+  if (state.captureMode && !resolveChangeling()) setCaptureMode(false);
+  // Core drops invisible tools when preparing controls, so they must be rebuilt, not just re-rendered.
+  ui.controls?.render({ reset: true });
+  const hud = canvas?.tokens?.hud;
+  if (hud?.rendered) {
+    // Collapse our palette first: core re-activates the remembered palette after rendering and would fail
+    // if our palette no longer exists (actor undesignated).
+    if (hud.activePalette === PALETTE) hud.togglePalette(PALETTE, false);
+    hud.render();
+  }
+  refreshLibraries();
+});
+
+/* GM: right-click an actor in the sidebar to designate / undesignate it as a changeling. */
+Hooks.on("getActorContextOptions", (app, entries) => {
+  if (!game.user.isGM) return;
+  const actorFrom = li => game.actors.get((li?.dataset ?? li?.[0]?.dataset)?.entryId);
+  const v14 = (game.release?.generation ?? 13) >= 14;
+  const entry = (labelKey, icon, isVisible, run) => v14
+    ? { label: labelKey, icon, visible: li => isVisible(actorFrom(li)), onClick: (event, li) => run(actorFrom(li)) }
+    : { name: labelKey, icon, condition: li => isVisible(actorFrom(li)), callback: li => run(actorFrom(li)) };
+  entries.push(
+    entry("CHANGELING.GM.Designate", `<i class="fa-solid fa-masks-theater"></i>`,
+      a => !!a && !isChangelingActor(a), a => setChangeling(a, true)),
+    entry("CHANGELING.GM.Undesignate", `<i class="fa-solid fa-user-slash"></i>`,
+      a => !!a && isChangelingActor(a), a => setChangeling(a, false))
+  );
+});

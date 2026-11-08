@@ -1,4 +1,5 @@
 import { MODULE_ID, SOCKET, loc, setting, FilePickerImpl } from "./constants.js";
+import { isChangelingActor } from "./store.js";
 
 /*
  * Players usually lack the "Upload New Files" permission on a hosted game. Uploads therefore go:
@@ -190,6 +191,7 @@ async function gmHandleChunk(msg) {
     const user = game.users.get(msg.userId);
     const actor = game.actors.get(msg.actorId);
     if (!user || !actor || !actor.testUserPermission(user, "OWNER")) throw new Error("Permission denied");
+    if (!isChangelingActor(actor)) throw new Error(loc("Notify.NotDesignated"));
     const ext = extOf(msg.filename);
     if (!ALLOWED_EXT.includes(ext)) throw new Error(loc("Notify.BadType"));
 

@@ -1,5 +1,7 @@
 import { MODULE_ID, PALETTE, TRUE_FORM_ID, loc, escapeHTML, isVideo, setting } from "./constants.js";
-import { canUseOn, getAppearances, getTrueForm, getCurrentId } from "./store.js";
+import {
+  canUseOn, getAppearances, getTrueForm, getCurrentId, isChangelingActor, setChangeling, looksLikeChangeling
+} from "./store.js";
 import {
   state, switchTo, pickFiles, setCaptureMode, editAppearanceDialog, addFromFiles, addFromUrl
 } from "./actions.js";
@@ -178,11 +180,34 @@ function reopenIfClosed(hud, tokenObj) {
   timer = setTimeout(reopen, (Number(setting("transitionDuration")) || 900) + 2500);
 }
 
+/** GM-only toggle (left column) to designate this token's actor as a changeling. */
+function addDesignationToggle(root, actor) {
+  const col = root.querySelector(".col.left");
+  if (!col) return;
+  const on = isChangelingActor(actor);
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "control-icon changeling-gm-toggle";
+  if (on) btn.classList.add("active");
+  else if (looksLikeChangeling(actor)) btn.classList.add("cf-suggested");
+  btn.dataset.tooltip = loc(on ? "GM.UndesignateHint" : "GM.DesignateHint", { name: escapeHTML(actor.name) });
+  btn.setAttribute("aria-label", loc(on ? "GM.Undesignate" : "GM.Designate"));
+  btn.innerHTML = `<i class="fa-solid fa-dna" inert></i>`;
+  btn.addEventListener("click", event => {
+    event.preventDefault();
+    event.stopPropagation();
+    setChangeling(actor, !on);
+  });
+  col.append(btn);
+}
+
 function onRenderTokenHUD(hud, html) {
   const root = html instanceof HTMLElement ? html : html?.[0];
   const doc = hud.document ?? hud.object?.document;
   const actor = doc?.actor;
-  if (!root || !actor || !canUseOn(actor)) return;
+  if (!root || !actor) return;
+  if (game.user.isGM) addDesignationToggle(root, actor);
+  if (!canUseOn(actor)) return;
   const col = root.querySelector(".col.right");
   if (!col) return;
 

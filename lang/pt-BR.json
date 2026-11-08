@@ -18,7 +18,8 @@
       "Memorized": "Rosto memorizado: {name}",
       "HoverAToken": "Passe o mouse sobre um token para memorizar o rosto dele.",
       "CaptureModeOn": "Modo de captura: clique em qualquer token para memorizar o rosto. Esc para sair.",
-      "Uploaded": "Novo rosto disponível: {name}"
+      "Uploaded": "Novo rosto disponível: {name}",
+      "NotDesignated": "Este personagem não foi definido como changeling pelo GM."
     },
     "Chat": {
       "Reverted": "<strong>{actor}</strong> voltou à forma verdadeira.",
@@ -61,8 +62,6 @@
       "Revert": "Voltar à forma verdadeira",
       "SetTrueForm": "Usar aparência atual como verdadeira",
       "SetTrueFormHint": "Registra a arte/nome atuais do token como sua forma verdadeira (útil se você trocou a arte do personagem).",
-      "Mark": "Marcar como changeling",
-      "MarkHint": "Este ator não foi detectado como changeling. Marque para exibir as ferramentas sempre.",
       "DropTitle": "Arraste imagens aqui, cole com Ctrl+V ou clique para escolher",
       "DropHint": "As imagens são reduzidas e enviadas ao servidor do jogo — você não precisa ser o host.",
       "UrlPlaceholder": "…ou cole o link de uma imagem",
@@ -78,10 +77,22 @@
       "Library": "Changeling: grimório de rostos"
     },
     "Keys": {
-      "capture": { "Name": "Memorizar rosto sob o cursor", "Hint": "Memoriza a aparência do token sob o mouse." },
-      "library": { "Name": "Abrir grimório de rostos", "Hint": "Abre a janela com todos os rostos conhecidos." },
-      "revert": { "Name": "Voltar à forma verdadeira", "Hint": "Reverte seu changeling para a forma verdadeira." },
-      "captureMode": { "Name": "Alternar modo de captura", "Hint": "Enquanto ativo, clicar num token memoriza o rosto dele." }
+      "capture": {
+        "Name": "Memorizar rosto sob o cursor",
+        "Hint": "Memoriza a aparência do token sob o mouse."
+      },
+      "library": {
+        "Name": "Abrir grimório de rostos",
+        "Hint": "Abre a janela com todos os rostos conhecidos."
+      },
+      "revert": {
+        "Name": "Voltar à forma verdadeira",
+        "Hint": "Reverte seu changeling para a forma verdadeira."
+      },
+      "captureMode": {
+        "Name": "Alternar modo de captura",
+        "Hint": "Enquanto ativo, clicar num token memoriza o rosto dele."
+      }
     },
     "Settings": {
       "UploadSource": {
@@ -91,25 +102,59 @@
         "Forge": "The Forge (biblioteca de assets)",
         "S3": "Amazon S3"
       },
-      "UploadBucket": { "Name": "Bucket S3", "Hint": "Só usado quando o destino é S3." },
-      "UploadPath": { "Name": "Pasta dos envios", "Hint": "Pasta base; cada mundo/personagem ganha uma subpasta." },
+      "UploadBucket": {
+        "Name": "Bucket S3",
+        "Hint": "Só usado quando o destino é S3."
+      },
+      "UploadPath": {
+        "Name": "Pasta dos envios",
+        "Hint": "Pasta base; cada mundo/personagem ganha uma subpasta."
+      },
       "UploadMode": {
         "Name": "Modo de envio",
         "Hint": "Automático: quem tem permissão de upload envia direto; os demais enviam pelo GM conectado. Sempre pelo GM: tudo passa pelo navegador do GM.",
         "Auto": "Automático",
         "GM": "Sempre pelo GM"
       },
-      "MaxImageSize": { "Name": "Tamanho máximo da imagem (px)", "Hint": "Imagens maiores são reduzidas e convertidas para WEBP antes do envio." },
-      "RevertOnDeath": { "Name": "Reverter ao morrer", "Hint": "Ao morrer (3 falhas em testes contra a morte ou condição Morto), o changeling volta à forma verdadeira." },
-      "WhisperGM": { "Name": "Sussurrar trocas ao GM", "Hint": "Envia uma mensagem privada ao GM sempre que um changeling troca de rosto." },
-      "AllCharacters": { "Name": "Disponível em todos os personagens de jogador", "Hint": "Mostra o botão para qualquer personagem que o jogador controle, mesmo que a espécie não seja detectada como Changeling." },
-      "ChangeName": { "Name": "Trocar o nome do token", "Hint": "Ao assumir um rosto, o token também passa a usar o nome dele." },
-      "UpdatePrototype": { "Name": "Manter o disfarce em novas cenas", "Hint": "Atualiza também o token protótipo, para o disfarce continuar quando o token for colocado em outra cena." },
-      "ChangePortrait": { "Name": "Trocar o retrato do personagem", "Hint": "Também muda a imagem da ficha (volta ao reverter)." },
-      "Transition": { "Name": "Efeito de transformação", "Hint": "Animação usada ao trocar a arte do token." },
-      "TransitionDuration": { "Name": "Duração do efeito (ms)" },
-      "PromptName": { "Name": "Perguntar o nome ao memorizar", "Hint": "Se desligado, salva direto com o nome do token (ou “Rosto desconhecido”)." },
-      "SyncTVA": { "Name": "Espelhar no Token Variant Art", "Hint": "Se o Token Variant Art estiver ativo, os rostos também aparecem como variantes compartilhadas no HUD dele." }
+      "MaxImageSize": {
+        "Name": "Tamanho máximo da imagem (px)",
+        "Hint": "Imagens maiores são reduzidas e convertidas para WEBP antes do envio."
+      },
+      "RevertOnDeath": {
+        "Name": "Reverter ao morrer",
+        "Hint": "Ao morrer (3 falhas em testes contra a morte ou condição Morto), o changeling volta à forma verdadeira."
+      },
+      "WhisperGM": {
+        "Name": "Sussurrar trocas ao GM",
+        "Hint": "Envia uma mensagem privada ao GM sempre que um changeling troca de rosto."
+      },
+      "ChangeName": {
+        "Name": "Trocar o nome do token",
+        "Hint": "Ao assumir um rosto, o token também passa a usar o nome dele."
+      },
+      "UpdatePrototype": {
+        "Name": "Manter o disfarce em novas cenas",
+        "Hint": "Atualiza também o token protótipo, para o disfarce continuar quando o token for colocado em outra cena."
+      },
+      "ChangePortrait": {
+        "Name": "Trocar o retrato do personagem",
+        "Hint": "Também muda a imagem da ficha (volta ao reverter)."
+      },
+      "Transition": {
+        "Name": "Efeito de transformação",
+        "Hint": "Animação usada ao trocar a arte do token."
+      },
+      "TransitionDuration": {
+        "Name": "Duração do efeito (ms)"
+      },
+      "PromptName": {
+        "Name": "Perguntar o nome ao memorizar",
+        "Hint": "Se desligado, salva direto com o nome do token (ou “Rosto desconhecido”)."
+      },
+      "SyncTVA": {
+        "Name": "Espelhar no Token Variant Art",
+        "Hint": "Se o Token Variant Art estiver ativo, os rostos também aparecem como variantes compartilhadas no HUD dele."
+      }
     },
     "Transitions": {
       "none": "Nenhuma (instantâneo)",
@@ -126,6 +171,14 @@
       "waves": "Ondas",
       "whiteNoise": "Estática",
       "hole": "Buraco"
+    },
+    "GM": {
+      "Designate": "Definir como changeling",
+      "Undesignate": "Remover changeling",
+      "DesignateHint": "<strong>GM:</strong> definir {name} como changeling — o dono passa a ver as ferramentas de troca de rosto",
+      "UndesignateHint": "<strong>GM:</strong> {name} é changeling. Clique para remover (as ferramentas somem para o jogador)",
+      "Designated": "{name} agora é changeling.",
+      "Undesignated": "{name} não é mais changeling."
     }
   }
 }

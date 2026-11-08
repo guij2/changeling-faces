@@ -1,4 +1,4 @@
-import { MODULE_ID, FLAGS, setting } from "./constants.js";
+import { MODULE_ID, FLAGS, setting, loc } from "./constants.js";
 
 const CHANGELING_RE = /changeling|metamorf|shape\s*-?\s*changer|mudan[çc]a\s+de\s+forma|transmorf/i;
 
@@ -6,25 +6,47 @@ const CHANGELING_RE = /changeling|metamorf|shape\s*-?\s*changer|mudan[çc]a\s+de
 /*  Actor resolution                                                   */
 /* ------------------------------------------------------------------ */
 
-/** Does this actor look like a changeling (species item / feature named like one, or flagged)? */
-export function isChangelingActor(actor) {
+/**
+ * Heuristic used only to hint the GM (species/feature named like a changeling). It grants nothing by itself.
+ */
+export function looksLikeChangeling(actor) {
   if (!actor) return false;
-  const flag = actor.getFlag(MODULE_ID, FLAGS.ENABLED);
-  if (flag === true) return true;
-  if (flag === false) return false;
   const race = actor.system?.details?.race;
   const raceName = typeof race === "string" ? race : race?.name;
   if (raceName && CHANGELING_RE.test(raceName)) return true;
   return actor.items?.some(i => CHANGELING_RE.test(i.name)) ?? false;
 }
 
+/** Ids of the actors the GM designated as changelings (world setting — only the GM can change it). */
+export function changelingIds() {
+  return new Set(setting("changelings") ?? []);
+}
+
+/** Has the GM designated this actor as a changeling? (Synthetic token actors share their base actor's id.) */
+export function isChangelingActor(actor) {
+  return !!actor && changelingIds().has(actor.id);
+}
+
 /** Should the HUD button / tools be offered for this actor to the current user? */
 export function canUseOn(actor) {
-  if (!actor?.isOwner) return false;
-  if (isChangelingActor(actor)) return true;
-  if (actor.getFlag(MODULE_ID, FLAGS.ENABLED) === false) return false;
-  // Players: any character they own. GM: only actors detected/flagged as changelings.
-  return !game.user.isGM && setting("allCharacters") && actor.type === "character";
+  return !!actor?.isOwner && isChangelingActor(actor);
+}
+
+/** Does this user own at least one designated changeling? Decides whether any of the UI shows up at all. */
+export function hasAnyChangeling(user = game.user) {
+  const ids = changelingIds();
+  if (!ids.size) return false;
+  return game.actors.some(a => ids.has(a.id) && a.testUserPermission(user, "OWNER"));
+}
+
+/** GM only: designate or undesignate an actor as a changeling. */
+export async function setChangeling(actor, enabled) {
+  if (!game.user.isGM || !actor) return;
+  const ids = changelingIds();
+  if (enabled) ids.add(actor.id);
+  else ids.delete(actor.id);
+  await game.settings.set(MODULE_ID, "changelings", [...ids]);
+  ui.notifications.info(loc(enabled ? "GM.Designated" : "GM.Undesignated", { name: actor.name }));
 }
 
 /**
@@ -34,20 +56,15 @@ export function canUseOn(actor) {
 export function resolveChangeling(token = null) {
   const doc = token?.document ?? token;
   if (doc?.actor && canUseOn(doc.actor)) return { actor: doc.actor, token: doc };
-  const controlled = canvas?.tokens?.controlled ?? [];
-  const ctl = controlled.find(t => canUseOn(t.actor) && isChangelingActor(t.actor))
-    ?? controlled.find(t => canUseOn(t.actor));
+  const ctl = (canvas?.tokens?.controlled ?? []).find(t => canUseOn(t.actor));
   if (ctl) return { actor: ctl.actor, token: ctl.document };
+  const tokenFor = a => canvas?.scene?.tokens.find(t => t.actorId === a.id) ?? null;
   const ch = game.user.character;
-  if (ch && canUseOn(ch)) {
-    const tok = canvas?.scene?.tokens.find(t => t.actorLink && t.actorId === ch.id) ?? null;
-    return { actor: ch, token: tok };
-  }
-  if (game.user.isGM) {
-    const flagged = game.actors.find(a => a.getFlag(MODULE_ID, FLAGS.ENABLED) === true);
-    if (flagged) return { actor: flagged, token: canvas?.scene?.tokens.find(t => t.actorId === flagged.id) ?? null };
-  }
-  return null;
+  if (ch && canUseOn(ch)) return { actor: ch, token: tokenFor(ch) };
+  const ids = changelingIds();
+  const owned = game.actors.find(a => ids.has(a.id) && a.isOwner && (game.user.isGM || a.type === "character"))
+    ?? game.actors.find(a => ids.has(a.id) && a.isOwner);
+  return owned ? { actor: owned, token: tokenFor(owned) } : null;
 }
 
 /* ------------------------------------------------------------------ */

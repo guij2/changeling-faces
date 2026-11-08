@@ -457,3 +457,19 @@ body.changeling-capture-mode #board {
   border-top: 1px solid var(--cf-tile-border);
   padding-top: 8px;
 }
+
+/* ---------------- GM designation toggle ---------------- */
+
+#token-hud .changeling-gm-toggle.active i {
+  color: var(--cf-violet);
+  text-shadow: 0 0 6px var(--cf-violet-soft);
+}
+
+#token-hud .changeling-gm-toggle.cf-suggested {
+  animation: cf-hint 2.4s ease-in-out infinite;
+}
+
+@keyframes cf-hint {
+  0%, 100% { box-shadow: 0 0 10px var(--color-shadow-dark); }
+  50% { box-shadow: 0 0 10px var(--cf-violet); }
+}

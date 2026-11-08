@@ -1,6 +1,7 @@
 import { MODULE_ID, loc, setting, escapeHTML, DialogV2, isVideo } from "./constants.js";
 import {
-  resolveChangeling, snapshotToken, addAppearance, getAppearances, updateAppearance, removeAppearance
+  resolveChangeling, snapshotToken, addAppearance, getAppearances, updateAppearance, removeAppearance,
+  hasAnyChangeling, canUseOn
 } from "./store.js";
 import { applyAppearance, revertToTrueForm } from "./apply.js";
 import { prepareImage, uploadForActor, fetchUrlAsFile } from "./upload.js";
@@ -19,9 +20,10 @@ export function emitChange(actor = null) {
   Hooks.callAll(`${MODULE_ID}.changed`, actor);
 }
 
+/** Players the GM did not designate get no feedback at all, so the module stays invisible to them. */
 function requireChangeling(token = null) {
   const found = resolveChangeling(token);
-  if (!found) ui.notifications.warn(loc("Notify.NoChangeling"));
+  if (!found && hasAnyChangeling()) ui.notifications.warn(loc("Notify.NoChangeling"));
   return found;
 }
 
@@ -126,6 +128,7 @@ export async function captureToken(token) {
 }
 
 export function captureHovered() {
+  if (!hasAnyChangeling()) return;
   const hovered = canvas.tokens?.hover;
   if (!hovered) {
     ui.notifications.warn(loc("Notify.HoverAToken"));
@@ -187,6 +190,7 @@ export function registerCaptureListeners() {
 /* ------------------------------------------------------------------ */
 
 export async function addFromFiles(actor, files) {
+  if (!canUseOn(actor)) return;
   const list = [...files].filter(f => /^image\/|^video\//.test(f.type) || /\.(webp|png|jpe?g|gif|avif|svg|webm|mp4)$/i.test(f.name));
   if (!list.length) {
     ui.notifications.warn(loc("Notify.BadType"));
@@ -253,6 +257,7 @@ export function pickFiles(actor) {
 /* ------------------------------------------------------------------ */
 
 export async function editAppearanceDialog(actor, id) {
+  if (!canUseOn(actor)) return;
   const entry = getAppearances(actor).find(a => a.id === id);
   if (!entry) return;
   const src = entry.texture?.src ?? "";
@@ -317,6 +322,7 @@ export async function editAppearanceDialog(actor, id) {
 /* ------------------------------------------------------------------ */
 
 export async function switchTo(actor, id, token = null) {
+  if (!canUseOn(actor)) return;
   await applyAppearance(actor, id, { token });
   emitChange(actor);
 }

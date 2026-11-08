@@ -1,5 +1,5 @@
-import { MODULE_ID, FLAGS, TRUE_FORM_ID, loc, escapeHTML, isVideo } from "./constants.js";
-import { getAppearances, getTrueForm, getCurrentId, resolveChangeling, moveAppearance, isChangelingActor } from "./store.js";
+import { MODULE_ID, TRUE_FORM_ID, loc, escapeHTML, isVideo } from "./constants.js";
+import { getAppearances, getTrueForm, getCurrentId, resolveChangeling, moveAppearance, canUseOn } from "./store.js";
 import {
   state, switchTo, pickFiles, setCaptureMode, editAppearanceDialog, addFromFiles, addFromUrl, emitChange
 } from "./actions.js";
@@ -12,8 +12,8 @@ const instances = new Map();
 
 export function openLibrary(actor = null) {
   actor ??= resolveChangeling()?.actor;
-  if (!actor) {
-    ui.notifications.warn(loc("Notify.NoChangeling"));
+  if (!actor || !canUseOn(actor)) {
+    if (actor || resolveChangeling()) ui.notifications.warn(loc("Notify.NoChangeling"));
     return;
   }
   let app = instances.get(actor.id);
@@ -28,6 +28,10 @@ export function openLibrary(actor = null) {
 export function refreshLibraries(actor = null) {
   for (const app of instances.values()) {
     if (!app.rendered) continue;
+    if (!canUseOn(app.actor)) {
+      app.close();
+      continue;
+    }
     if (!actor || app.actor.id === actor.id) app.render();
   }
 }
@@ -54,8 +58,7 @@ export class FaceLibrary extends ApplicationV2 {
       upload: FaceLibrary.#onUpload,
       capture: FaceLibrary.#onCapture,
       importUrl: FaceLibrary.#onImportUrl,
-      setTrueForm: FaceLibrary.#onSetTrueForm,
-      toggleEnabled: FaceLibrary.#onToggleEnabled
+      setTrueForm: FaceLibrary.#onSetTrueForm
     }
   };
 
@@ -104,8 +107,6 @@ export class FaceLibrary extends ApplicationV2 {
       `<figure class="cf-card cf-uploading"><div class="cf-card-img"><i class="fa-solid fa-spinner fa-spin"></i></div><figcaption>${loc("Uploading")}</figcaption></figure>`
     ).join("");
 
-    const detected = isChangelingActor(actor);
-
     return `
       <header class="cf-lib-header">
         <div class="cf-true-card ${current ? "" : "active"}">
@@ -125,8 +126,6 @@ export class FaceLibrary extends ApplicationV2 {
               <i class="fa-solid fa-rotate-left"></i> ${loc("Library.Revert")}</button>
             <button type="button" data-action="setTrueForm" data-tooltip="${loc("Library.SetTrueFormHint")}">
               <i class="fa-solid fa-fingerprint"></i> ${loc("Library.SetTrueForm")}</button>
-            ${detected ? "" : `<button type="button" data-action="toggleEnabled" data-tooltip="${loc("Library.MarkHint")}">
-              <i class="fa-solid fa-dna"></i> ${loc("Library.Mark")}</button>`}
           </div>
         </div>
       </header>
@@ -263,8 +262,4 @@ export class FaceLibrary extends ApplicationV2 {
     emitChange(this.actor);
   }
 
-  static async #onToggleEnabled() {
-    await this.actor.setFlag(MODULE_ID, FLAGS.ENABLED, true);
-    emitChange(this.actor);
-  }
 }

@@ -7,7 +7,6 @@ export const FLAGS = {
   APPEARANCES: "appearances",
   TRUE_FORM: "trueForm",
   CURRENT: "current",
-  ENABLED: "enabled",
   TVA_SYNCED: "tvaSynced"
 };
 

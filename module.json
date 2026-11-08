@@ -2,7 +2,7 @@
   "id": "changeling-faces",
   "title": "Changeling: Mil Faces",
   "description": "Automatiza o traço Metamorfo (Shapechanger) do changeling: memorize rostos clicando em tokens, envie imagens em tempo real (mesmo sem ser o host) e troque de aparência numa paleta rápida no Token HUD, no estilo do Token Variant Art.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "authors": [
     {
       "name": "barao",
@@ -11,7 +11,7 @@
   ],
   "url": "https://github.com/guij2/changeling-faces",
   "manifest": "https://github.com/guij2/changeling-faces/releases/latest/download/module.json",
-  "download": "https://github.com/guij2/changeling-faces/releases/download/v1.0.0/changeling-faces.zip",
+  "download": "https://github.com/guij2/changeling-faces/releases/download/v1.1.0/changeling-faces.zip",
   "bugs": "https://github.com/guij2/changeling-faces/issues",
   "compatibility": {
     "minimum": "13",

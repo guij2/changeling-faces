@@ -26,14 +26,17 @@ Módulo para Foundry VTT (v13–v14, feito para D&D 5e) que automatiza o traço 
 
    Funciona também no The Forge (*Install from manifest URL*). Outra opção é baixar o `changeling-faces.zip` da [página de releases](https://github.com/guij2/changeling-faces/releases) e extraí-lo em `Data/modules/changeling-faces/`.
 2. Abra o mundo e ative **Changeling: Mil Faces** em *Gerenciar Módulos*.
-3. (Opcional) Em *Configurações → Changeling: Mil Faces*:
+3. **Defina quem é o changeling.** Nada aparece para nenhum jogador até você fazer isso. Há duas formas:
+   - na barra lateral de **Atores**, clique com o botão direito no personagem e escolha **Definir como changeling**, ou
+   - no **Token HUD** do personagem, clique no botão de **DNA** (coluna esquerda; só o GM o vê).
+
+   O dono do personagem passa a ver a paleta, as ferramentas e os atalhos na hora, sem recarregar. Para tirar, use o mesmo lugar (**Remover changeling**): a interface some e os rostos ficam guardados, caso você devolva depois. A lista fica nas configurações do mundo, que o jogador não consegue editar. O botão de DNA pulsa de leve quando a ficha parece ser de um changeling (espécie ou traço com esse nome), mas isso é só uma dica.
+4. (Opcional) Em *Configurações → Changeling: Mil Faces*:
    - **Destino dos envios**: "Pasta de dados" no Foundry próprio. No The Forge ele já vem configurado para usar a biblioteca de assets.
    - **Pasta dos envios**: o padrão é `changeling-faces/<mundo>/<personagem>`.
    - **Sussurrar trocas ao GM**: você recebe uma mensagem privada a cada troca de rosto.
 
-Para os envios funcionarem, **um GM precisa estar conectado**. A outra opção é dar ao jogador a permissão "Enviar arquivos", e aí ele envia direto.
-
-O botão aparece em qualquer personagem de jogador. Para outros atores, o módulo detecta o changeling pela espécie ou pelos traços (Changeling/Metamorfo/Shapechanger). Também dá para usar o botão "Marcar como changeling" no grimório.
+Para os envios funcionarem, **um GM precisa estar conectado**. A outra opção é dar ao jogador a permissão "Enviar arquivos", e aí ele envia direto. O GM só aceita envios para personagens que ele definiu como changeling.
 
 ## Atalhos (editáveis em Configurar Controles)
 
