@@ -1,0 +1,131 @@
+{
+  "CHANGELING": {
+    "TrueForm": "True form",
+    "UnknownFace": "Unknown face {n}",
+    "Uploading": "Uploading…",
+    "Notify": {
+      "NoTrueForm": "No true form saved yet.",
+      "TrueFormSet": "Current look recorded as your true form.",
+      "RevertedOnDeath": "{name} died and reverted to their true form.",
+      "BadType": "Unsupported file type (use PNG, JPG, WEBP, GIF, AVIF, SVG, WEBM or MP4).",
+      "TooLarge": "File too large (max 25 MB).",
+      "UploadFailed": "Image upload failed.",
+      "NoGM": "No GM is connected to receive the upload. Ask the GM to join or to grant you upload permission.",
+      "UploadTimeout": "The GM did not answer the upload in time. Try again.",
+      "CorsBlocked": "The website blocked downloading that image. Save it to your computer and drag the file in.",
+      "NoChangeling": "Select your changeling's token first.",
+      "CannotCopySelf": "That's you — pick another token.",
+      "Memorized": "Face memorized: {name}",
+      "HoverAToken": "Hover a token to memorize its face.",
+      "CaptureModeOn": "Capture mode: click any token to memorize its face. Esc to exit.",
+      "Uploaded": "New face available: {name}"
+    },
+    "Chat": {
+      "Reverted": "<strong>{actor}</strong> reverted to their true form.",
+      "Changed": "<strong>{actor}</strong> took the face of <strong>{face}</strong>."
+    },
+    "Dialog": {
+      "NameLabel": "What do you call this face?",
+      "Memorize": "Memorize",
+      "CaptureTitle": "Memorize face",
+      "CaptureAgainTitle": "Memorize again (already known as “{name}”)",
+      "UploadTitle": "New face",
+      "UseName": "Also change the token name to this name",
+      "Scale": "Art scale",
+      "EditTitle": "Edit face",
+      "Save": "Save",
+      "Delete": "Forget",
+      "DeleteTitle": "Forget face",
+      "DeleteConfirm": "Forget the face <strong>{name}</strong>? (The uploaded image stays on the server.)"
+    },
+    "HUD": {
+      "Button": "Thousand Faces",
+      "ButtonHint": "<strong>Click:</strong> change face<br><strong>Right-click:</strong> open the face library",
+      "Upload": "Upload image",
+      "UploadHint": "Choose a file — or drop an image here / paste with Ctrl+V",
+      "Filter": "Filter…",
+      "CaptureHint": "Capture mode: click tokens on the map to memorize their faces (Alt+X)",
+      "LibraryHint": "Open the face library (Alt+V)",
+      "Empty": "You don't know any faces yet. Hover a token and press Alt+C, use the eyedropper, or upload an image."
+    },
+    "Library": {
+      "Title": "Thousand Faces — {name}",
+      "DisguisedAs": "Disguised as {name}",
+      "InTrueForm": "In true form",
+      "ApplyHint": "Take this face",
+      "RevertHint": "Revert to true form",
+      "KindUpload": "Uploaded image",
+      "KindToken": "Copied from a token",
+      "Edit": "Edit / forget",
+      "TrueFormAuto": "recorded on the first transformation",
+      "Revert": "Revert to true form",
+      "SetTrueForm": "Use current look as true form",
+      "SetTrueFormHint": "Records the token's current art/name as your true form (useful if you changed your character art).",
+      "Mark": "Mark as changeling",
+      "MarkHint": "This actor wasn't detected as a changeling. Mark it to always show the tools.",
+      "DropTitle": "Drop images here, paste with Ctrl+V or click to choose",
+      "DropHint": "Images are downscaled and uploaded to the game server — you don't need to be the host.",
+      "UrlPlaceholder": "…or paste an image link",
+      "UrlImport": "Import",
+      "Capture": "Capture faces",
+      "CaptureOn": "Capturing… (Esc)",
+      "Known": "Known faces ({n})",
+      "Empty": "No faces memorized yet.",
+      "RulesReminder": "<strong>Shapechanger.</strong> As an action you change your appearance and voice — but you can't copy someone you've never seen, and clothing/equipment doesn't change. You stay disguised until you use an action to revert or you die."
+    },
+    "Controls": {
+      "Capture": "Changeling: capture faces (click tokens)",
+      "Library": "Changeling: face library"
+    },
+    "Keys": {
+      "capture": { "Name": "Memorize face under cursor", "Hint": "Memorizes the look of the token under the mouse." },
+      "library": { "Name": "Open face library", "Hint": "Opens the window with every known face." },
+      "revert": { "Name": "Revert to true form", "Hint": "Reverts your changeling to their true form." },
+      "captureMode": { "Name": "Toggle capture mode", "Hint": "While active, clicking a token memorizes its face." }
+    },
+    "Settings": {
+      "UploadSource": {
+        "Name": "Upload destination",
+        "Hint": "Where images uploaded by players are stored.",
+        "Data": "Foundry user data",
+        "Forge": "The Forge (assets library)",
+        "S3": "Amazon S3"
+      },
+      "UploadBucket": { "Name": "S3 bucket", "Hint": "Only used when the destination is S3." },
+      "UploadPath": { "Name": "Upload folder", "Hint": "Base folder; each world/character gets a subfolder." },
+      "UploadMode": {
+        "Name": "Upload mode",
+        "Hint": "Automatic: users with upload permission upload directly; everyone else uploads through the connected GM. Always via GM: everything goes through the GM's browser.",
+        "Auto": "Automatic",
+        "GM": "Always via GM"
+      },
+      "MaxImageSize": { "Name": "Max image size (px)", "Hint": "Larger images are downscaled and converted to WEBP before upload." },
+      "RevertOnDeath": { "Name": "Revert on death", "Hint": "On death (3 failed death saves or the Dead condition) the changeling reverts to their true form." },
+      "WhisperGM": { "Name": "Whisper face changes to the GM", "Hint": "Sends the GM a private message whenever a changeling changes face." },
+      "AllCharacters": { "Name": "Available on every player character", "Hint": "Shows the button on any character a player owns, even if their species isn't detected as Changeling." },
+      "ChangeName": { "Name": "Change the token name", "Hint": "When taking a face, the token also takes its name." },
+      "UpdatePrototype": { "Name": "Keep the disguise on new scenes", "Hint": "Also updates the prototype token so the disguise persists when the token is placed on another scene." },
+      "ChangePortrait": { "Name": "Change the character portrait", "Hint": "Also changes the sheet image (restored on revert)." },
+      "Transition": { "Name": "Transformation effect", "Hint": "Animation used when the token art changes." },
+      "TransitionDuration": { "Name": "Effect duration (ms)" },
+      "PromptName": { "Name": "Ask for a name when memorizing", "Hint": "If off, saves straight away with the token's name (or “Unknown face”)." },
+      "SyncTVA": { "Name": "Mirror into Token Variant Art", "Hint": "If Token Variant Art is active, faces also show up as shared variants in its HUD." }
+    },
+    "Transitions": {
+      "none": "None (instant)",
+      "morph": "Morph",
+      "fade": "Fade",
+      "dots": "Dots",
+      "glitch": "Glitch",
+      "hologram": "Hologram",
+      "holeSwirl": "Hole swirl",
+      "swirl": "Swirl",
+      "waterDrop": "Water drop",
+      "crosshatch": "Crosshatch",
+      "wind": "Wind",
+      "waves": "Waves",
+      "whiteNoise": "White noise",
+      "hole": "Hole"
+    }
+  }
+}
