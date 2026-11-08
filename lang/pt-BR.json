@@ -7,7 +7,7 @@
       "NoTrueForm": "Nenhuma forma verdadeira salva ainda.",
       "TrueFormSet": "Aparência atual registrada como sua forma verdadeira.",
       "RevertedOnDeath": "{name} morreu e voltou à forma verdadeira.",
-      "BadType": "Tipo de arquivo não suportado (use PNG, JPG, WEBP, GIF, AVIF, SVG, WEBM ou MP4).",
+      "BadType": "Tipo de arquivo não suportado (use PNG, JPG, WEBP, AVIF, GIF, WEBM ou MP4).",
       "TooLarge": "Arquivo grande demais (máx. 25 MB).",
       "UploadFailed": "Falha ao enviar a imagem.",
       "NoGM": "Nenhum GM conectado para receber o envio. Peça ao GM para entrar ou para te dar permissão de upload.",
@@ -19,7 +19,9 @@
       "HoverAToken": "Passe o mouse sobre um token para memorizar o rosto dele.",
       "CaptureModeOn": "Modo de captura: clique em qualquer token para memorizar o rosto. Esc para sair.",
       "Uploaded": "Novo rosto disponível: {name}",
-      "NotDesignated": "Este personagem não foi definido como changeling pelo GM."
+      "NotDesignated": "Este personagem não foi definido como changeling pelo GM.",
+      "Busy": "O GM já está recebendo outros envios seus. Espere terminar e tente de novo.",
+      "RateLimited": "Muitos envios em pouco tempo. Espere alguns minutos."
     },
     "Chat": {
       "Reverted": "<strong>{actor}</strong> voltou à forma verdadeira.",

@@ -7,7 +7,7 @@
       "NoTrueForm": "No true form saved yet.",
       "TrueFormSet": "Current look recorded as your true form.",
       "RevertedOnDeath": "{name} died and reverted to their true form.",
-      "BadType": "Unsupported file type (use PNG, JPG, WEBP, GIF, AVIF, SVG, WEBM or MP4).",
+      "BadType": "Unsupported file type (use PNG, JPG, WEBP, AVIF, GIF, WEBM or MP4).",
       "TooLarge": "File too large (max 25 MB).",
       "UploadFailed": "Image upload failed.",
       "NoGM": "No GM is connected to receive the upload. Ask the GM to join or to grant you upload permission.",
@@ -19,7 +19,9 @@
       "HoverAToken": "Hover a token to memorize its face.",
       "CaptureModeOn": "Capture mode: click any token to memorize its face. Esc to exit.",
       "Uploaded": "New face available: {name}",
-      "NotDesignated": "The GM has not made this character a changeling."
+      "NotDesignated": "The GM has not made this character a changeling.",
+      "Busy": "The GM is still receiving your other uploads. Wait for them to finish and try again.",
+      "RateLimited": "Too many uploads in a short time. Wait a few minutes."
     },
     "Chat": {
       "Reverted": "<strong>{actor}</strong> reverted to their true form.",

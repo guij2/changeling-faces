@@ -123,7 +123,7 @@ export async function captureToken(token) {
     useName: true
   });
   target.object?.ring?.flashColor?.(foundry.utils.Color.from("#c9a227"), { duration: 600 });
-  ui.notifications.info(loc("Notify.Memorized", { name }));
+  ui.notifications.info(loc("Notify.Memorized", { name: escapeHTML(name) }));
   emitChange(actor);
 }
 
@@ -191,7 +191,8 @@ export function registerCaptureListeners() {
 
 export async function addFromFiles(actor, files) {
   if (!canUseOn(actor)) return;
-  const list = [...files].filter(f => /^image\/|^video\//.test(f.type) || /\.(webp|png|jpe?g|gif|avif|svg|webm|mp4)$/i.test(f.name));
+  const list = [...files].filter(f => !/svg/i.test(f.type) && !/\.svgz?$/i.test(f.name)
+    && (/^image\/|^video\//.test(f.type) || /\.(webp|png|jpe?g|gif|avif|webm|mp4)$/i.test(f.name)));
   if (!list.length) {
     ui.notifications.warn(loc("Notify.BadType"));
     return;
@@ -218,7 +219,7 @@ export async function addFromFiles(actor, files) {
         portrait: null,
         useName: true
       });
-      ui.notifications.info(loc("Notify.Uploaded", { name }));
+      ui.notifications.info(loc("Notify.Uploaded", { name: escapeHTML(name) }));
     } catch (err) {
       console.error(`${MODULE_ID} | upload failed`, err);
       ui.notifications.error(`${loc("Notify.UploadFailed")} ${err.message ?? ""}`);

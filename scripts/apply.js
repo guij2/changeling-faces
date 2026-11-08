@@ -22,24 +22,51 @@ function tokensFor(actor, token) {
  */
 function buildTokenChanges(look, base, { isTrueForm = false } = {}) {
   const changes = {};
-  let texture = foundry.utils.deepClone(look.texture ?? {});
+  let texture = pickFields(look.texture, TEXTURE_FIELDS);
   if (look.kind === "upload" && base?.texture) {
     // Uploaded art only defines src + scale; inherit the rest (anchor, fit, tint...) from the true form.
-    texture = { ...foundry.utils.deepClone(base.texture), ...texture };
+    texture = { ...pickFields(base.texture, TEXTURE_FIELDS), ...texture };
   }
   for (const [k, v] of Object.entries(texture)) changes[`texture.${k}`] = v;
 
-  if (look.ring) {
-    for (const [k, v] of Object.entries(foundry.utils.flattenObject({ ring: look.ring }))) changes[k] = v;
+  if (look.ring && typeof look.ring === "object") {
+    const flat = foundry.utils.flattenObject(look.ring);
+    for (const [k, v] of Object.entries(pickFields(flat, RING_FIELDS))) changes[`ring.${k}`] = v;
   } else if (look.kind === "upload") {
     // Make sure a dynamic ring (if enabled) shows the uploaded image instead of an old subject texture.
     changes["ring.subject.texture"] = null;
   }
 
-  if (setting("changeName") && look.name && (isTrueForm || look.useName !== false)) {
-    changes.name = look.name;
+  if (setting("changeName") && typeof look.name === "string" && look.name
+    && (isTrueForm || look.useName !== false)) {
+    changes.name = look.name.slice(0, 120);
   }
   return changes;
+}
+
+/*
+ * Appearance data lives in actor flags the player can write freely. Only these token fields — the ones a
+ * token owner may already edit — are ever copied into an update, with the expected value types.
+ */
+const isNum = v => typeof v === "number" && Number.isFinite(v);
+const isStr = v => typeof v === "string" && v.length <= 2048;
+const isColor = v => v === null || (typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v));
+const TEXTURE_FIELDS = {
+  src: isStr, scaleX: isNum, scaleY: isNum, anchorX: isNum, anchorY: isNum, offsetX: isNum, offsetY: isNum,
+  fit: v => ["fill", "contain", "cover", "width", "height"].includes(v), tint: isColor, alphaThreshold: isNum
+};
+const RING_FIELDS = {
+  enabled: v => typeof v === "boolean", effects: v => Number.isInteger(v) && v >= 0,
+  "colors.ring": isColor, "colors.background": isColor,
+  "subject.texture": v => v === null || isStr(v), "subject.scale": isNum
+};
+function pickFields(obj, spec) {
+  const out = {};
+  if (!obj || typeof obj !== "object") return out;
+  for (const [key, valid] of Object.entries(spec)) {
+    if (Object.hasOwn(obj, key) && valid(obj[key])) out[key] = obj[key];
+  }
+  return out;
 }
 
 /** Keep only the flattened changes whose value differs from the document's current source data. */
@@ -111,7 +138,7 @@ export async function applyAppearance(actor, appearanceId, { token = null, silen
   // Portrait
   if (setting("changePortrait")) {
     const portrait = reverting ? trueForm.portrait : (look.portrait || look.texture?.src);
-    if (portrait) actorUpdate.img = portrait;
+    if (isStr(portrait) && portrait) actorUpdate.img = portrait;
   }
 
   actorUpdate[`flags.${MODULE_ID}.${FLAGS.CURRENT}`] = reverting ? null : look.id;
@@ -160,7 +187,7 @@ function maybeRevertOnDeath(actor) {
   if (!actor || !setting("revertOnDeath")) return;
   if (!getCurrentId(actor) || !isResponsibleClient(actor)) return;
   revertToTrueForm(actor, { silent: true }).then(() => {
-    ui.notifications.info(loc("Notify.RevertedOnDeath", { name: actor.name }));
+    ui.notifications.info(loc("Notify.RevertedOnDeath", { name: escapeHTML(actor.name) }));
   });
 }
 

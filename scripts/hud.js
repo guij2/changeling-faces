@@ -28,7 +28,7 @@ function tileHTML({ id, name, src, active, trueForm }) {
   if (trueForm) classes.push("cf-true-form");
   const tooltip = trueForm ? `${loc("TrueForm")}: ${name}` : name;
   return `
-    <div class="${classes.join(" ")}" data-id="${id}" data-tooltip="${escapeHTML(tooltip)}" data-tooltip-direction="UP"
+    <div class="${classes.join(" ")}" data-id="${id}" data-tooltip="${escapeHTML(escapeHTML(tooltip))}" data-tooltip-direction="UP"
          data-search="${escapeHTML((name ?? "").toLowerCase())}">
       ${media(src, "cf-tile-img")}
       ${trueForm ? `<i class="cf-badge fa-solid fa-fingerprint"></i>` : ""}

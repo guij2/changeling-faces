@@ -1,4 +1,4 @@
-import { MODULE_ID, FLAGS, setting, loc } from "./constants.js";
+import { MODULE_ID, FLAGS, setting, loc, escapeHTML } from "./constants.js";
 
 const CHANGELING_RE = /changeling|metamorf|shape\s*-?\s*changer|mudan[çc]a\s+de\s+forma|transmorf/i;
 
@@ -46,7 +46,7 @@ export async function setChangeling(actor, enabled) {
   if (enabled) ids.add(actor.id);
   else ids.delete(actor.id);
   await game.settings.set(MODULE_ID, "changelings", [...ids]);
-  ui.notifications.info(loc(enabled ? "GM.Designated" : "GM.Undesignated", { name: actor.name }));
+  ui.notifications.info(loc(enabled ? "GM.Designated" : "GM.Undesignated", { name: escapeHTML(actor.name) }));
 }
 
 /**
